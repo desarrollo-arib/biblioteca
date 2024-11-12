@@ -1,0 +1,41 @@
+
+{% extends 'dashboard_admin.html' %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-6 text-primary">Préstamos Activos</h1>
+
+<div class="overflow-x-auto">
+    <table class="min-w-full bg-white border border-gray-200">
+        <thead class="bg-primary text-white">
+            <tr>
+                <th class="py-3 px-4 text-left">Usuario</th>
+                <th class="py-3 px-4 text-left">Material</th>
+                <th class="py-3 px-4 text-left">Fecha de Préstamo</th>
+                <th class="py-3 px-4 text-left">Fecha de Devolución</th>
+                <th class="py-3 px-4 text-left">Acciones</th>
+            </tr>
+        </thead>
+        <tbody class="text-gray-700">
+            {% for prestamo in object_list %}
+            <tr class="border-b hover:bg-gray-100">
+                <td class="py-3 px-4">{{ prestamo.usuario.first_name }} {{ prestamo.usuario.last_name }}</td>
+                <td class="py-3 px-4">{{ prestamo.material.titulo }}</td>
+                <td class="py-3 px-4">{{ prestamo.fecha_prestamo|date:"d/m/Y" }}</td>
+                <td class="py-3 px-4">{{ prestamo.fecha_devolucion|date:"d/m/Y" }}</td>
+                <td class="py-3 px-4">
+                    <a href="{% url 'registrar_devolucion' prestamo.pk %}" class="inline-block bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-sm">
+                        Registrar Devolución
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="py-4 px-4 text-center text-gray-500">
+                    No hay préstamos activos.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

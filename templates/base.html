@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Mi Aplicación{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/output.css' %}">
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+  <!-- Barra de Navegación Superior -->
+  <nav class="bg-white border-b border-gray-200 fixed z-30 w-full">
+    <div class="px-4 py-3 flex items-center justify-between">
+      <!-- Logo y Título -->
+      <div class="flex items-center">
+        <button id="toggleSidebar" class="text-gray-500 focus:outline-none lg:hidden">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+        <a href="{% url 'biblioteca_virtual' %}" class="text-xl font-bold ml-2">IR BIBLIOTECA</a>
+      </div>
+      <!-- Opciones de Usuario -->
+      {% if user.is_authenticated %}
+      <div class="relative">
+        <button id="userMenuButton" class="flex items-center focus:outline-none" onclick="toggleUserMenu()">
+          <img class="w-8 h-8 rounded-full" src="{% static 'img/descarga.jpeg' %}" alt="Usuario">
+          <span class="ml-2 text-gray-500">{{ user.first_name }} {{user.last_name}}</span>
+          <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.586l3.71-4.356a.75.75 0 011.14.97l-4 4.7a.75.75 0 01-1.14 0l-4-4.7a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+          </svg>
+        </button>
+        <div id="userMenu" class="hidden absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+          {% if user.rol == 'Estudiante' or user.rol == 'Docente' %}
+          <a href="{% url 'mis_prestamos' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Mis Préstamos</a>
+          {% endif %}
+          {% if user.rol == 'Bibliotecario' or user.rol == 'Administrador' %}
+          <a href="{% url 'dashboard_admin' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Administración</a>
+          {% endif %}
+          <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">Cerrar Sesión</button>
+          </form>
+        </div>
+      </div>
+      {% else %}
+      <a href="{% url 'login' %}" class="text-gray-700 hover:text-gray-900">Iniciar Sesión</a>
+      {% endif %}
+    </div>
+  </nav>
+
+  <!-- Contenedor Principal -->
+  <div class="flex min-h-screen">
+    <!-- Menú Lateral -->
+    <aside id="sidebar" class="fixed top-0 left-0 w-64 h-full bg-primary border-r border-gray-200 pt-16 hidden lg:block">
+      <div class="px-6 py-4">
+        <ul class="space-y-2">
+          {% block sidebar %}
+          {% endblock %}
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Contenido Principal -->
+    <main class="flex-1 pt-16 lg:pl-64">
+      <div class="px-4 py-6">
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+  </div>
+
+  <script src="{% static 'js/app.js' %}"></script>
+  <script>
+    const sidebar = document.getElementById('sidebar');
+    const toggleSidebar = document.getElementById('toggleSidebar');
+    toggleSidebar.addEventListener('click', () => {
+      sidebar.classList.toggle('-translate-x-full');
+    });
+  </script>
+  <script>
+    function toggleUserMenu() {
+      const userMenu = document.getElementById('userMenu');
+      userMenu.classList.toggle('hidden');
+    }
+    window.addEventListener('click', function(e) {
+      const userMenu = document.getElementById('userMenu');
+      if (!userMenu.contains(e.target) && !e.target.closest('#userMenuButton')) {
+        userMenu.classList.add('hidden');
+      }
+    });
+  </script>
+</body>
+</html>

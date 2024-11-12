@@ -1,0 +1,103 @@
+{% extends 'dashboard_admin.html' %}
+{% load static %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-5 text-primary">Registrar Nuevo Usuario</h1>
+
+<!-- Mensajes de éxito o error -->
+{% if messages %}
+  <div class="mb-4">
+    {% for message in messages %}
+      <div class="p-4 mb-4 text-sm text-white {% if message.tags %}bg-green-500{% else %}bg-red-500{% endif %} rounded">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<form method="post" class="bg-white p-6 rounded-lg shadow-md">
+    {% csrf_token %}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Campo: Nombres -->
+        <div>
+            <label for="id_first_name" class="block text-gray-700">Nombres</label>
+            <input type="text" name="first_name" id="id_first_name" value="{{ form.first_name.value|default_if_none:'' }}" class="mt-1 block w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            {% if form.first_name.errors %}
+              <p class="text-red-500 text-sm mt-1">{{ form.first_name.errors.as_text|cut:'* ' }}</p>
+            {% endif %}
+        </div>
+        <!-- Campo: Apellidos -->
+        <div>
+            <label for="id_last_name" class="block text-gray-700">Apellidos</label>
+            <input type="text" name="last_name" id="id_last_name" value="{{ form.last_name.value|default_if_none:'' }}" class="mt-1 block w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            {% if form.last_name.errors %}
+              <p class="text-red-500 text-sm mt-1">{{ form.last_name.errors.as_text|cut:'* ' }}</p>
+            {% endif %}
+        </div>
+        <!-- Campo: Correo Electrónico -->
+        <div>
+            <label for="id_email" class="block text-gray-700">Correo Electrónico</label>
+            <input type="email" name="email" id="id_email" value="{{ form.email.value|default_if_none:'' }}" class="mt-1 block w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            {% if form.email.errors %}
+              <p class="text-red-500 text-sm mt-1">{{ form.email.errors.as_text|cut:'* ' }}</p>
+            {% endif %}
+        </div>
+        <!-- Campo: DNI -->
+        <div>
+            <label for="id_dni" class="block text-gray-700">DNI</label>
+            <input type="text" name="dni" id="id_dni" value="{{ form.dni.value|default_if_none:'' }}" class="mt-1 block w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            {% if form.dni.errors %}
+              <p class="text-red-500 text-sm mt-1">{{ form.dni.errors.as_text|cut:'* ' }}</p>
+            {% endif %}
+        </div>
+        <!-- Campo: Programa de Estudios -->
+        <div>
+          <label for="id_programa_estudio" class="block text-gray-700">Programa de Estudios</label>
+          <select name="programa_estudio" id="id_programa_estudio" class="mt-1 block w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+              <option value="">Seleccione un programa_estudios</option>
+              <option value="Contabilidad" {% if form.programa_estudio.value == "Contabilidad" %}selected{% endif %}>Contabilidad</option>
+              <option value="Construcción Civil" {% if form.programa_estudio.value == "Construcción Civil" %}selected{% endif %}>Construcción Civil</option>
+              <option value="Explotación Minera" {% if form.programa_estudio.value == "Explotación Minera" %}selected{% endif %}>Explotación Minera</option>
+              <option value="Empleabilidad" {% if form.programa_estudio.value == "Empleabilidad" %}selected{% endif %}>Empleabilidad</option>
+
+            </select>
+          {% if form.programa_estudios.errors %}
+            <p class="text-red-500 text-sm mt-1">{{ form.programa_estudio.errors.as_text|cut:'* ' }}</p>
+          {% endif %}
+      </div>
+        <!-- Campo: Rol -->
+        <div>
+            <label for="id_rol" class="block text-gray-700">Rol</label>
+            <select name="rol" id="id_rol" class="mt-1 block w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                <option value="">Seleccione un rol</option>
+                <option value="Administrador" {% if form.rol.value == "Administrador" %}selected{% endif %}>Administrador</option>
+                <option value="Bibliotecario" {% if form.rol.value == "Bibliotecario" %}selected{% endif %}>Bibliotecario</option>
+                <option value="Estudiante" {% if form.rol.value == "Estudiante" %}selected{% endif %}>Estudiante</option>
+                <option value="Estudiante" {% if form.rol.value == "Estudiante" %}selected{% endif %}>Docente</option>
+            </select>
+            {% if form.rol.errors %}
+              <p class="text-red-500 text-sm mt-1">{{ form.rol.errors.as_text|cut:'* ' }}</p>
+            {% endif %}
+        </div>
+        <!-- Campo: Contraseña -->
+        <div>
+            <label for="id_password1" class="block text-gray-700">Contraseña</label>
+            <input type="password" name="password1" id="id_password1" class="mt-1 block w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            {% if form.password1.errors %}
+              <p class="text-red-500 text-sm mt-1">{{ form.password1.errors.as_text|cut:'* ' }}</p>
+            {% endif %}
+        </div>
+        <!-- Campo: Confirmar Contraseña -->
+        <div>
+            <label for="id_password2" class="block text-gray-700">Confirmar Contraseña</label>
+            <input type="password" name="password2" id="id_password2" class="mt-1 block w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            {% if form.password2.errors %}
+              <p class="text-red-500 text-sm mt-1">{{ form.password2.errors.as_text|cut:'* ' }}</p>
+            {% endif %}
+        </div>
+    </div>
+    <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-6">
+        Registrar
+    </button>
+</form>
+{% endblock %}

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Constancia de Biblioteca - {{ estudiante.first_name }} {{ estudiante.last_name }}</title>
+    <style>
+        /* Estilos para impresión */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 50px;
+        }
+        .encabezado {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .encabezado img {
+            height: 100px;
+        }
+        .titulo {
+            text-align: center;
+            font-size: 24px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .contenido {
+            margin-top: 30px;
+            font-size: 16px;
+            text-align: justify;
+        }
+        .tabla {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .tabla th, .tabla td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: left;
+        }
+        .firma {
+            margin-top: 50px;
+            text-align: right;
+        }
+        .codigo {
+            position: absolute;
+            top: 50px;
+            right: 50px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    {% load static %}
+
+    
+    <div class="encabezado">
+        <img src="https://iestparib.edu.pe/wp-content/uploads/2024/09/cropped-LOGO-ARIB-1.png" alt="Logo">
+        <h2>INSTITUTO DE EDUCACIÓN SUPERIOR TECNOLÓGICO PÚBLICO</h2>
+        <h3>"ALIANZA RENOVADA ICHUÑA BÉLGICA"</h3>
+        <p>RM N° 0353-2004-ED</p>
+    </div>
+    <div class="titulo">
+        CONSTANCIA DE BIBLIOTECA
+    </div>
+    <div class="contenido">
+        <p><strong>HACE CONSTAR QUE:</strong></p>
+        <p>
+            El egresado(ada), <strong>{{ estudiante.first_name }} {{ estudiante.last_name }}</strong>, con DNI <strong>{{ estudiante.dni }}</strong>, del programa de estudios de <strong>{{ estudiante.programa_estudio }}</strong>, <strong>REGISTRA LA INCLUSIÓN EN LA BIBLIOTECA CENTRAL,
+            EL EMPASTADO DE LOS INFORMES DE EXPERIENCIAS FORMATIVAS EN SITUACIONES REALES DE TRABAJO FÍSICO Y DIGITAL</strong> , tal como consta en el Memorando emitido por el Director General de la Institución.
+
+        </p>
+    </div>
+    <table class="tabla">
+        <thead>
+            <tr>
+                <th>Módulo</th>
+                <th>Institución donde realizó la práctica</th>
+                <th>Fecha de Ingreso</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for modulo in modulos %}
+            <tr>
+                <td><strong>{{ modulo.codigo}}</strong> {{ modulo.nombre_modulo }}</td>
+                <td>{{ modulo.empresa }}</td>
+                <td>{{ modulo.fecha_ingreso }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <P>Se extiende la presente conforme a lo precisado en la <strong>Directiva N° 004-2022-ME-GRE-IESTP-ARIB</strong> y a solitud
+    de la parte interesada, para los fines que estime por conveniente.</P>
+   
+   
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="fecha">
+        Fecha de Emisión: <strong>Ichuña</strong>, {{ constancia.fecha_creacion }}
+    </div>
+    <div class="codigo"></div>
+        Código de Constancia: <strong>{{ constancia.codigo_constancia }}</strong>
+    </div>
+</body>
+</html>

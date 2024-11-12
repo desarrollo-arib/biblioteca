@@ -1,0 +1,96 @@
+<!-- templates/detalle_constancia.html -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Constancia de Biblioteca - {{ estudiante }}</title>
+    <style>
+        /* Estilos para impresión */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 50px;
+        }
+        .encabezado {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .encabezado img {
+            height: 100px;
+        }
+        .titulo {
+            text-align: center;
+            font-size: 24px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .contenido {
+            margin-top: 30px;
+            font-size: 16px;
+            text-align: justify;
+        }
+        .tabla {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .tabla th, .tabla td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: left;
+        }
+        .firma {
+            margin-top: 50px;
+            text-align: right;
+        }
+        .codigo {
+            position: absolute;
+            top: 50px;
+            right: 50px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="codigo">
+        Código de Constancia: {{ constancia.codigo_constancia }}
+    </div>
+    <div class="encabezado">
+        <h2>Nombre de la Institución</h2>
+        <h3>Biblioteca Central</h3>
+    </div>
+    <div class="titulo">
+        CONSTANCIA DE BIBLIOTECA
+    </div>
+    <div class="contenido">
+        <p>
+            Se hace constar que el/la estudiante <strong>{{ estudiante.nombres }} {{ estudiante.apellidos }}</strong>, con DNI <strong>{{ estudiante.dni }}</strong>, del programa de estudios de <strong>{{ estudiante.programa_estudio }}</strong>, ha ingresado a la Biblioteca Central los tres módulos de experiencias formativas en situaciones reales de trabajo, conforme a lo requerido.
+        </p>
+    </div>
+    <table class="tabla">
+        <thead>
+            <tr>
+                <th>Módulo</th>
+                <th>Empresa donde realizó la práctica</th>
+                <th>Fecha de Ingreso</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for modulo in modulos %}
+            <tr>
+                <td>{{ modulo.nombre_modulo }}</td>
+                <td>{{ modulo.empresa }}</td>
+                <td>{{ modulo.fecha_ingreso }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="firma">
+        <p>____________________________</p>
+        <p>Firma y Sello</p>
+    </div>
+    <div class="fecha">
+        Fecha de Emisión: {{ constancia.fecha_emision }}
+    </div>
+</body>
+</html>

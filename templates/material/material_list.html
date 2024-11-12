@@ -1,0 +1,77 @@
+{% extends 'dashboard_admin.html' %}
+{% load static %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-6 text-primary">Lista de Materiales</h1>
+
+<div class="flex justify-between items-center mb-6">
+    <a href="{% url 'material_create' %}" class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-md">
+        Agregar Nuevo Material
+    </a>
+    <!-- Barra de búsqueda (Opcional) -->
+    <form method="GET" action="" class="flex">
+        <input type="text" name="q" placeholder="Buscar..." class="border border-gray-300 p-2 rounded-l-md focus:outline-none focus:ring-2 focus:ring-primary">
+        <button type="submit" class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-r-md">
+            Buscar
+        </button>
+    </form>
+</div>
+
+<div class="overflow-x-auto">
+    <table class="min-w-full bg-white rounded-lg shadow-md overflow-hidden">
+        <thead class="bg-primary text-white">
+            <tr>
+                <th class="px-6 py-3 text-left">ID</th>
+                <th class="px-6 py-3 text-left">Título</th>
+                <th class="px-6 py-3 text-left">Autor</th>
+                <th class="px-6 py-3 text-left">Tipo</th>
+                <th class="px-6 py-3 text-left">Copias Disponibles</th>
+                <th class="px-6 py-3 text-left">Acciones</th>
+            </tr>
+        </thead>
+        <tbody class="text-gray-700">
+            {% for material in object_list %}
+            <tr class="border-b hover:bg-gray-100">
+                <td class="px-6 py-4">{{ material.id }}</td>
+                <td class="px-6 py-4">{{ material.titulo }}</td>
+                <td class="px-6 py-4">{{ material.autor }}</td>
+                <td class="px-6 py-4">{{ material.tipo }}</td>
+                <td class="px-6 py-4">{{ material.copias_disponibles }}</td>
+                <td class="px-6 py-4">
+                    <a href="{% url 'material_update' material.pk %}" class="text-green-500 hover:underline">Editar</a> |
+                    <a href="{% url 'material_delete' material.pk %}" class="text-red-500 hover:underline" onclick="return confirm('¿Estás seguro de que deseas eliminar este material?');">Eliminar</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                    No se encontraron materiales.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Paginación (Opcional) -->
+<div class="mt-6">
+    {% if is_paginated %}
+    <nav class="flex justify-between">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-md">Anterior</a>
+        {% else %}
+        <span class="bg-gray-300 text-gray-600 font-bold py-2 px-4 rounded-md cursor-not-allowed">Anterior</span>
+        {% endif %}
+
+        <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-md">Siguiente</a>
+        {% else %}
+        <span class="bg-gray-300 text-gray-600 font-bold py-2 px-4 rounded-md cursor-not-allowed">Siguiente</span>
+        {% endif %}
+    </nav>
+    {% endif %}
+</div>
+
+{% endblock %}

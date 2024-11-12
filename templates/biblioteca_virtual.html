@@ -1,0 +1,191 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Biblioteca Arib{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/output.css' %}">
+</head>
+<body class="bg-bg-light font-sans leading-normal tracking-normal">
+  <!-- Barra de Navegación Superior -->
+  <nav class="bg-primary border-b border-primary-dark fixed z-30 w-full">
+    <div class="px-4 py-3">
+      <div class="flex items-center justify-between">
+        <!-- Logo y Título -->
+        <div class="flex items-center">
+          <button id="toggleSidebar" class="text-white focus:outline-none lg:hidden">
+            <!-- Icono del Menú -->
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+          </button>
+          <img src="https://df5kbf1hky40.cloudfront.net/media/cache/16/fd/16fd3fc1bad9126fbe67ee10390ea1fb.png" alt="Logo" class="h-8 ml-2">
+          <a href="{% url 'biblioteca_virtual' %}" class="text-xl font-bold ml-2 text-white">Instituto de Educación Superior Tecnológico Público Alianza Renovada Ichuña Bélgica</a>
+        </div>
+        <!-- Opciones de Usuario -->
+        {% if user.is_authenticated %}
+        <div class="flex items-center">
+          <div class="relative">
+            <!-- Botón del Menú Desplegable -->
+            <button id="userMenuButton" class="flex items-center focus:outline-none" onclick="toggleUserMenu()" aria-haspopup="true" aria-expanded="false">
+              <img class="w-8 h-8 rounded-full" src="{% static 'img/descarga.jpeg' %}" alt="Usuario">
+              <span class="ml-2 text-white">{{ user.first_name }} {{user.last_name}}</span>
+              <!-- Icono de Flecha -->
+              <svg class="w-4 h-4 ml-1 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.5l3.71-4.27a.75.75 0 011.14.96l-4 4.6a.75.75 0 01-1.14 0l-4-4.6a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+              </svg>
+            </button>
+            <!-- Menú Dropdown -->
+            <div id="userMenu" class="hidden absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+              {% if user.rol == 'Estudiante' or user.rol == 'Docente' %}
+              <a href="{% url 'mis_prestamos' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Mis Préstamos</a>
+              {% endif %}
+              {% if user.rol == 'Bibliotecario' or user.rol == 'Administrador' %}
+              <a href="{% url 'dashboard_admin' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Administración</a>
+              {% endif %}
+              <!-- Cerrar Sesión -->
+              <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">Cerrar Sesión</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <a href="{% url 'login' %}" class="text-white hover:text-secondary">Iniciar Sesión</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <!-- Contenido Principal -->
+  <main class="pt-20">
+    <div class="container mx-auto px-4">
+      <h1 class="text-3xl font-bold mb-5 text-primary py-3">Biblioteca Virtual</h1>
+
+<!-- Barra de búsqueda con filtros -->
+<form method="GET" action="" class="mb-5">
+  <div class="flex flex-wrap items-center -mx-2">
+    <!-- Campo de búsqueda -->
+    <div class="w-full lg:w-1/4 px-2 mb-4 lg:mb-0">
+      <input
+        type="text"
+        name="q"
+        placeholder="Buscar por título o autor..."
+        value="{{ q }}"
+        class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+      >
+    </div>
+
+    <!-- Filtro por Programa de Estudios -->
+    <div class="w-full lg:w-1/4 px-2 mb-4 lg:mb-0">
+      <select name="programa_estudio" class="w-full p-2 border border-gray-300 rounded-md">
+        <option value="">Todos los Programas</option>
+        {% for programa in programas %}
+        <option value="{{ programa }}" {% if programa == programa_estudio_actual %}selected{% endif %}>{{ programa }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Filtro por Año de Publicación -->
+    <div class="w-full lg:w-1/4 px-2 mb-4 lg:mb-0">
+      <select name="fecha_publicacion" class="w-full p-2 border border-gray-300 rounded-md">
+        <option value="">Todos los Años</option>
+        {% for año in años_publicacion %}
+        <option value="{{ año }}" {% if año|stringformat:"s" == fecha_publicacion_actual %}selected{% endif %}>{{ año }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Filtro por Tipo de Material -->
+    <div class="w-full lg:w-1/4 px-2 mb-4 lg:mb-0">
+      <select name="tipo" class="w-full p-2 border border-gray-300 rounded-md">
+        <option value="">Todos los Tipos</option>
+        {% for tipo in tipos %}
+        <option value="{{ tipo }}" {% if tipo == tipo_actual %}selected{% endif %}>{{ tipo }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <!-- Botón de búsqueda -->
+    <div class="w-full lg:w-auto px-2 my-2">
+      <button type="submit" class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded">
+        Buscar
+      </button>
+    </div>
+  </div>
+</form>
+
+<!-- Lista de materiales -->
+<!-- Lista de materiales -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  {% for material in materiales %}
+  <div class="bg-white rounded-lg shadow-md overflow-hidden">
+    {% if material.get_portada_url %}
+    <div class="bg-white rounded-t-lg overflow-hidden" style="height: 250px;">
+      <img src="{{ material.get_portada_url }}" alt="{{ material.titulo }}" class="w-full h-full object-contain">
+    </div>
+    {% else %}
+    <img src="{% static 'img/default_cover.jpg' %}" alt="Portada no disponible" class="w-full h-48 object-cover">
+    {% endif %}
+    <div class="p-4">
+      <h2 class="text-xl font-semibold text-primary mb-2">{{ material.titulo }}</h2>
+      <p class="text-gray-700 mb-1"><strong>Autor:</strong> {{ material.autor }}</p>
+      <p class="text-gray-700 mb-1"><strong>Disponibilidad:</strong> {{ material.disponibilidad }}</p>
+      <p class="text-gray-700 mb-1"><strong>Programa de Estudios:</strong> {{ material.programa_estudio }}</p>
+
+      {% if material.disponibilidad == 'Físico' or material.disponibilidad == 'Ambos' %}
+      <p class="text-gray-700 mb-2"><strong>Copias Disponibles:</strong> {{ material.copias_texto }}</p>
+      {% endif %}
+
+      {% if material.disponibilidad == 'Digital' or material.disponibilidad == 'Ambos' %}
+      <div class="mt-4 flex flex-col space-y-2">
+        <a href="{{ material.get_previsualizacion_url }}" target="_blank" class="inline-block bg-secondary hover:bg-secondary-dark text-white font-bold py-2 px-4 rounded" onclick="mostrarDescarga({{ material.id }})">
+          Previsualizar PDF
+        </a>
+        <!-- Botón "Descargar PDF" inicialmente oculto -->
+        <a href="{{ material.get_archivo_url }}" target="_blank" class="inline-block bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded hidden" id="descargar-{{ material.id }}">
+          Descargar PDF
+        </a>
+      </div>
+      {% else %}
+      <p class="mt-4 text-warning">Disponible solo para préstamo en físico en biblioteca central.</p>
+      {% endif %}
+    </div>
+  </div>
+  {% empty %}
+  <p class="text-gray-500">No se encontraron materiales.</p>
+  {% endfor %}
+</div>
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <script src="{% static 'js/app.js' %}"></script>
+  <script>
+    // Mostrar y ocultar el menú de usuario
+    function toggleUserMenu() {
+      const userMenu = document.getElementById('userMenu');
+      userMenu.classList.toggle('hidden');
+      const isExpanded = userMenuButton.getAttribute('aria-expanded') === 'true';
+      userMenuButton.setAttribute('aria-expanded', !isExpanded);
+    }
+
+    // Cerrar el menú cuando se hace clic fuera de él
+    window.addEventListener('click', function(e) {
+      const userMenu = document.getElementById('userMenu');
+      const userMenuButton = document.getElementById('userMenuButton');
+
+      if (!userMenu.contains(e.target) && !userMenuButton.contains(e.target)) {
+        userMenu.classList.add('hidden');
+      }
+    });
+  </script>
+  <script>
+    function mostrarDescarga(materialId) {
+      const botonDescarga = document.getElementById(`descargar-${materialId}`);
+      botonDescarga.classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>

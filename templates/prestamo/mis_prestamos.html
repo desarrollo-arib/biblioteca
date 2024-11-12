@@ -1,0 +1,28 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-5">Mis Préstamos Activos</h1>
+<table class="min-w-full bg-white">
+    <thead>
+        <tr>
+            <th class="py-2">Material</th>
+            <th class="py-2">Fecha de Préstamo</th>
+            <th class="py-2">Fecha de Devolución</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for prestamo in prestamos %}
+        <tr>
+            <td class="py-2">{{ prestamo.material.titulo }}</td>
+            <td class="py-2">{{ prestamo.fecha_prestamo }}</td>
+            <td class="py-2">{{ prestamo.fecha_devolucion }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3" class="py-2 text-center">No tienes préstamos activos.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

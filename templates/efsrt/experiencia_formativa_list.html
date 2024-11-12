@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-5">Experiencias Formativas</h1>
+<a href="{% url 'experiencia_formativa_create' %}" class="bg-blue-500 text-white px-4 py-2 rounded">Nueva Experiencia</a>
+<table class="min-w-full mt-5">
+    <thead>
+        <tr>
+            <th class="px-6 py-3">Título</th>
+            <th class="px-6 py-3">Estudiante</th>
+            <th class="px-6 py-3">Fecha de Subida</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for experiencia in object_list %}
+        <tr class="bg-white">
+            <td class="px-6 py-4">{{ experiencia.titulo }}</td>
+            <td class="px-6 py-4">{{ experiencia.estudiante.username }}</td>
+            <td class="px-6 py-4">{{ experiencia.fecha_subida }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

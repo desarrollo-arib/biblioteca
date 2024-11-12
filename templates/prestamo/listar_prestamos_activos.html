@@ -1,0 +1,44 @@
+{% extends 'dashboard_admin.html' %}
+
+{% load static %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-5">Préstamos Activos</h1>
+<table class="min-w-full bg-white border border-gray-200">
+    <thead class="bg-primary text-white">
+        <tr>
+            <th class="py-3 px-4 text-left">Usuario</th>
+            <th class="py-3 px-4 text-left">Material</th>
+            <th class="py-3 px-4 text-left">Fecha de Préstamo</th>
+            <th class="py-3 px-4 text-left">Fecha de Devolución</th>
+            <th class="py-3 px-4 text-left">Estado</th>
+            <th class="py-3 px-4 text-left">Acciones</th>
+        </tr>
+    </thead>
+    <tbody class="text-gray-700">
+        {% for prestamo in prestamos %}
+        <tr class="border-b {% if prestamo.esta_retrasado %}bg-red-100{% endif %}">
+            <td class="py-3 px-4">{{ prestamo.usuario }}</td>
+            <td class="py-3 px-4">{{ prestamo.material }}</td>
+            <td class="py-3 px-4">{{ prestamo.fecha_prestamo }}</td>
+            <td class="py-3 px-4">{{ prestamo.fecha_devolucion }}</td>
+            <td class="py-3 px-4">
+                {% if prestamo.esta_retrasado %}
+                    <span class="text-red-500 font-bold">Retrasado</span>
+                {% else %}
+                    <span class="text-green-500">En tiempo</span>
+                {% endif %}
+            </td>
+            <td class="py-3 px-4">
+                {% if prestamo.esta_retrasado %}
+                    <!-- Mostrar botón o notificación -->
+                    <a href="{% url 'enviar_recordatorio' prestamo.id %}" class="bg-red-500 text-white px-3 py-1 rounded">Enviar Recordatorio</a>
+                {% endif %}
+                <!-- Otras acciones, como registrar devolución -->
+                <a href="{% url 'registrar_devolucion' prestamo.id %}" class="bg-green-500 text-white px-3 py-1 rounded">Registrar Devolución</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

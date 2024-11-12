@@ -1,0 +1,83 @@
+{% extends '../dashboard_admin.html' %}
+{% load static %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-5 text-primary">Lista de Usuarios</h1>
+
+<!-- Formulario de Búsqueda (Opcional) -->
+<form method="GET" action="" class="mb-4">
+    <input type="text" name="q" placeholder="Buscar usuarios..." value="{{ request.GET.q }}" class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-light">
+    <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-light">
+        Buscar
+    </button>
+</form>
+
+<!-- Tabla de Usuarios -->
+<div class="overflow-x-auto">
+    <table class="min-w-full bg-white">
+        <thead>
+            <tr>
+                <th class="py-2 px-4 bg-gray-200">ID</th>
+                <th class="py-2 px-4 bg-gray-200">Correo</th>
+
+                <th class="py-2 px-4 bg-gray-200">Nombre de Usuario</th>
+                <th class="py-2 px-4 bg-gray-200">Apellidos</th>
+                <th class="py-2 px-4 bg-gray-200">Dni</th>
+                <th class="py-2 px-4 bg-gray-200">Rol</th>
+                <th class="py-2 px-4 bg-gray-200">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for usuario in usuarios %}
+            <tr class="border-b">
+                <td class="py-2 px-4">{{ usuario.id }}</td>
+                <td class="py-2 px-4">{{ usuario.email }}</td>
+                <td class="py-2 px-4">{{ usuario.first_name }}</td>
+                <td class="py-2 px-4">{{ usuario.last_name }}</td>
+                <td class="py-2 px-4">{{ usuario.dni }}</td>
+                <td class="py-2 px-4">{{ usuario.rol }}</td>
+                <td class="py-2 px-4">
+                    |
+                    <a href="{% url 'restablecer_contraseña' usuario.id %}" class="text-red-500 hover:underline" onclick="return confirm('¿Estás seguro de que deseas restablecer la contraseña de este usuario?')">Restablecer Contraseña</a>
+                </td>
+               
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center py-4">No hay usuarios registrados.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Paginación (Opcional) -->
+{% if usuarios.has_other_pages %}
+<div class="mt-4 flex justify-between">
+    <span class="text-sm text-gray-700">
+        Página {{ usuarios.number }} de {{ usuarios.paginator.num_pages }}
+    </span>
+    <div class="inline-flex">
+        {% if usuarios.has_previous %}
+        <a href="?page={{ usuarios.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="px-3 py-1 bg-gray-200 text-gray-700 rounded-l">
+            Anterior
+        </a>
+        {% else %}
+        <span class="px-3 py-1 bg-gray-100 text-gray-400 rounded-l cursor-not-allowed">
+            Anterior
+        </span>
+        {% endif %}
+
+        {% if usuarios.has_next %}
+        <a href="?page={{ usuarios.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="px-3 py-1 bg-gray-200 text-gray-700 rounded-r">
+            Siguiente
+        </a>
+        {% else %}
+        <span class="px-3 py-1 bg-gray-100 text-gray-400 rounded-r cursor-not-allowed">
+            Siguiente
+        </span>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

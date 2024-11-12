@@ -1,0 +1,191 @@
+{% extends 'dashboard_admin.html' %}
+{% load static %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-6 text-primary">Dashboard</h1>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <!-- Reporte de Usuarios por Rol -->
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-2xl font-semibold mb-4">Usuarios Registrados por Rol</h2>
+        <div class="relative h-64">
+            <canvas id="usuariosPorRolChart" class="w-full h-full"></canvas>
+        </div>
+    </div>
+
+    <!-- Reporte de Préstamos por Tipo de Material -->
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-2xl font-semibold mb-4">Préstamos por Tipo de Material</h2>
+        <div class="relative h-64">
+            <canvas id="prestamosPorTipoChart" class="w-full h-full"></canvas>
+        </div>
+    </div>
+
+    <!-- Materiales Más Prestados -->
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-2xl font-semibold mb-4">Materiales Más Prestados</h2>
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border border-gray-200">
+                <thead class="bg-primary text-white">
+                    <tr>
+                        <th class="py-3 px-4 text-left">Título</th>
+                        <th class="py-3 px-4 text-left">Cantidad de Préstamos</th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-700">
+                    {% for material in materiales_mas_prestados %}
+                    <tr class="border-b">
+                        <td class="py-3 px-4">{{ material.material__titulo }}</td>
+                        <td class="py-3 px-4">{{ material.total }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Empresas con Más EFSRT -->
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-2xl font-semibold mb-4">Empresas con Más EFSRT</h2>
+        {% if empresas_efsrt %}
+        <div class="relative h-64">
+            <canvas id="empresasEFSRTChart" class="w-full h-full"></canvas>
+        </div>
+        {% else %}
+            <p>No hay datos de empresas EFSRT.</p>
+        {% endif %}
+    </div>
+
+    <!-- Materiales por Tipo -->
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-2xl font-semibold mb-4">Materiales Registrados por Tipo</h2>
+        <div class="relative h-64">
+            <canvas id="materialesPorTipoChart" class="w-full h-full"></canvas>
+        </div>
+    </div>
+
+    <!-- Términos Más Buscados -->
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-2xl font-semibold mb-4">Términos Más Buscados</h2>
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border border-gray-200">
+                <thead class="bg-primary text-white">
+                    <tr>
+                        <th class="py-3 px-4 text-left">Término</th>
+                        <th class="py-3 px-4 text-left">Cantidad de Búsquedas</th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-700">
+                    {% for termino in terminos_mas_buscados %}
+                    <tr class="border-b">
+                        <td class="py-3 px-4">{{ termino.termino }}</td>
+                        <td class="py-3 px-4">{{ termino.total }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Incluir Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Datos para Usuarios por Rol
+    var usuariosPorRolData = {
+        labels: [{% for item in usuarios_por_rol %}'{{ item.rol }}',{% endfor %}],
+        datasets: [{
+            label: 'Usuarios',
+            data: [{% for item in usuarios_por_rol %}{{ item.total }},{% endfor %}],
+            backgroundColor: ['#1E3A8A', '#1E40AF', '#2563EB', '#3B82F6', '#60A5FA'],
+        }]
+    };
+
+    var usuariosPorRolConfig = {
+        type: 'pie',
+        data: usuariosPorRolData,
+    };
+
+    var usuariosPorRolChart = new Chart(
+        document.getElementById('usuariosPorRolChart'),
+        usuariosPorRolConfig
+    );
+
+    // Datos para Préstamos por Tipo de Material
+    var prestamosPorTipoData = {
+        labels: [{% for item in prestamos_por_tipo %}'{{ item.material__tipo }}',{% endfor %}],
+        datasets: [{
+            label: 'Préstamos',
+            data: [{% for item in prestamos_por_tipo %}{{ item.total }},{% endfor %}],
+            backgroundColor: ['#D97706', '#F59E0B', '#FBBF24', '#FCD34D', '#FDE68A'],
+        }]
+    };
+
+    var prestamosPorTipoConfig = {
+        type: 'bar',
+        data: prestamosPorTipoData,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    };
+
+    var prestamosPorTipoChart = new Chart(
+        document.getElementById('prestamosPorTipoChart'),
+        prestamosPorTipoConfig
+    );
+
+    // Datos para Empresas con Más EFSRT
+    var empresasEFSRTData = {
+        labels: [{% for item in empresas_efsrt %}'{{ item.empresa }}',{% endfor %}],
+        datasets: [{
+            label: 'Cantidad de EFSRT',
+            data: [{% for item in empresas_efsrt %}{{ item.total }},{% endfor %}],
+            backgroundColor: ['#059669', '#10B981', '#34D399', '#6EE7B7', '#A7F3D0'],
+        }]
+    };
+
+    var empresasEFSRTConfig = {
+        type: 'bar',
+        data: empresasEFSRTData,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    };
+
+    var empresasEFSRTChart = new Chart(
+        document.getElementById('empresasEFSRTChart'),
+        empresasEFSRTConfig
+    );
+
+    // Datos para Materiales por Tipo
+    var materialesPorTipoData = {
+        labels: [{% for item in materiales_por_tipo %}'{{ item.tipo }}',{% endfor %}],
+        datasets: [{
+            label: 'Materiales',
+            data: [{% for item in materiales_por_tipo %}{{ item.total }},{% endfor %}],
+            backgroundColor: ['#DC2626', '#EF4444', '#F87171', '#FCA5A5', '#FECACA'],
+        }]
+    };
+
+    var materialesPorTipoConfig = {
+        type: 'doughnut',
+        data: materialesPorTipoData,
+    };
+
+    var materialesPorTipoChart = new Chart(
+        document.getElementById('materialesPorTipoChart'),
+        materialesPorTipoConfig
+    );
+
+
+    
+</script>
+{% endblock %}

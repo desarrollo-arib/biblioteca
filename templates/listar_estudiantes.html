@@ -1,0 +1,32 @@
+<!-- templates/listar_estudiantes.html -->
+
+{% extends 'dashboard_admin.html' %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-6 text-primary">Lista de Estudiantes</h1>
+
+<table class="min-w-full bg-white border border-gray-200">
+    <thead class="bg-primary text-white">
+        <tr>
+            <th class="py-3 px-4 text-left">DNI</th>
+            <th class="py-3 px-4 text-left">Nombre</th>
+            <th class="py-3 px-4 text-left">Programa de Estudios</th>
+            <th class="py-3 px-4 text-left">Acciones</th>
+        </tr>
+    </thead>
+    <tbody class="text-gray-700">
+        {% for estudiante in estudiantes %}
+        <tr class="border-b">
+            <td class="py-3 px-4">{{ estudiante.dni }}</td>
+            <td class="py-3 px-4">{{ estudiante.first_name }} {{ estudiante.last_name }}</td>
+            <td class="py-3 px-4">{{ estudiante.programa_estudio }}</td>
+            <td class="py-3 px-4">
+                <a href="{% url 'detalle_estudiante' estudiante.id %}" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded text-sm">
+                    Ver Detalle
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

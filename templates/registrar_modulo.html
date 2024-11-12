@@ -1,0 +1,38 @@
+{% extends 'dashboard_admin.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-5">Registrar Módulo</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="mb-4">
+        {{ form.estudiante.label_tag }}
+        {{ form.estudiante }}
+        {{ form.estudiante.errors }}
+    </div>
+    <div class="mb-4">
+        {{ form.codigo.label_tag }}
+        {{ form.codigo }}
+        {{ form.codigo.errors }}
+    </div>
+    <div class="mb-4">
+        {{ form.nombre_modulo.label_tag }}
+        {{ form.nombre_modulo }}
+        {{ form.nombre_modulo.errors }}
+    </div>
+    <div class="mb-4">
+        {{ form.programa_estudio.label_tag }}
+        {{ form.programa_estudio }}
+        {{ form.programa_estudio.errors }}
+    </div>
+    <div class="mb-4">
+        {{ form.empresa.label_tag }}
+        {{ form.empresa }}
+        {{ form.empresa.errors }}
+    </div>
+    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Registrar</button>
+</form>
+{% endblock %}

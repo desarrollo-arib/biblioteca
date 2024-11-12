@@ -1,0 +1,185 @@
+{% extends '../dashboard_admin.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-8 text-primary">{{ view.action }} Material</h1>
+
+<form method="post" enctype="multipart/form-data" class="bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-6">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    <!-- Contenedor Principal -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Columna Izquierda -->
+        <div>
+            <div class="mb-5">
+                <label for="{{ form.titulo.id_for_label }}" class="block text-gray-700 font-semibold mb-2">{{ form.titulo.label }}:</label>
+                {% render_field form.titulo class="w-full border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" %}
+                {% if form.titulo.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.titulo.errors }}</p>
+                {% endif %}
+            </div>
+
+            <div class="mb-5">
+                <label for="{{ form.autor.id_for_label }}" class="block text-gray-700 font-semibold mb-2">{{ form.autor.label }}:</label>
+                {% render_field form.autor class="w-full border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" %}
+                {% if form.autor.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.autor.errors }}</p>
+                {% endif %}
+            </div>
+
+            <div class="mb-5">
+                <label for="{{ form.tipo.id_for_label }}" class="block text-gray-700 font-semibold mb-2">{{ form.tipo.label }}:</label>
+                {% render_field form.tipo class="w-full border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" %}
+                {% if form.tipo.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.tipo.errors }}</p>
+                {% endif %}
+            </div>
+
+            <div class="mb-5">
+                <label for="{{ form.fecha_publicacion.id_for_label }}" class="block text-gray-700 font-semibold mb-2">{{ form.fecha_publicacion.label }}:</label>
+                {% render_field form.fecha_publicacion class="w-full border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" %}
+                {% if form.fecha_publicacion.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.fecha_publicacion.errors }}</p>
+                {% endif %}
+            </div>
+
+            <div class="mb-5">
+                <label for="{{ form.descripcion.id_for_label }}" class="block text-gray-700 font-semibold mb-2">{{ form.descripcion.label }}:</label>
+                {% render_field form.descripcion class="w-full border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" %}
+                {% if form.descripcion.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.descripcion.errors }}</p>
+                {% endif %}
+            </div>
+
+            <div class="mb-5">
+                <label for="{{ form.programa_estudio.id_for_label }}" class="block text-gray-700 font-semibold mb-2">{{ form.programa_estudio.label }}:</label>
+                {% render_field form.programa_estudio class="w-full border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" %}
+                {% if form.programa_estudio.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.programa_estudio.errors }}</p>
+                {% endif %}
+            </div>
+            <div class="mb-5">
+                <label for="{{ form.disponibilidad.id_for_label }}" class="block text-gray-700 font-semibold mb-2">{{ form.disponibilidad.label }}:</label>
+                {% render_field form.disponibilidad class="w-full border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" %}
+                {% if form.disponibilidad.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.disponibilidad.errors }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Campos para los enlaces de Google Drive -->
+            <div class="mb-5">
+                <label for="{{ form.enlace_archivo.id_for_label }}" class="block text-gray-700 font-semibold mb-2">{{ form.enlace_archivo.label }}:</label>
+                {% render_field form.enlace_archivo class="w-full border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" %}
+                <small class="text-gray-500">Ingrese el ID del archivo en Google Drive</small>
+                {% if form.enlace_archivo.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.enlace_archivo.errors }}</p>
+                {% endif %}
+            </div>
+
+            <div class="mb-5">
+                <label for="{{ form.enlace_portada.id_for_label }}" class="block text-gray-700 font-semibold mb-2">{{ form.enlace_portada.label }}:</label>
+                {% render_field form.enlace_portada class="w-full border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" %}
+                <small class="text-gray-500">Ingrese el ID de la portada en Google Drive</small>
+                {% if form.enlace_portada.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ form.enlace_portada.errors }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Columna Derecha (Campos Específicos para Libros) -->
+        <div>
+            <!-- Contenedor de Campos Específicos -->
+            <div id="campos-libro" class="hidden">
+                <h2 class="text-xl font-semibold mb-4">Detalles del Libro</h2>
+
+                <div class="mb-5">
+                    <label for="{{ form.isbn.id_for_label }}" class="block text-gray-700 font-semibold mb-2">{{ form.isbn.label }}:</label>
+                    {% render_field form.isbn class="w-full border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" %}
+                    {% if form.isbn.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ form.isbn.errors }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="mb-5">
+                    <label for="{{ form.num_paginas.id_for_label }}" class="block text-gray-700 font-semibold mb-2">{{ form.num_paginas.label }}:</label>
+                    {% render_field form.num_paginas class="w-full border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" %}
+                    {% if form.num_paginas.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ form.num_paginas.errors }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="mb-5">
+                    <label for="{{ form.editorial.id_for_label }}" class="block text-gray-700 font-semibold mb-2">{{ form.editorial.label }}:</label>
+                    {% render_field form.editorial class="w-full border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" %}
+                    {% if form.editorial.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ form.editorial.errors }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="mb-5">
+                    <label for="{{ form.idioma.id_for_label }}" class="block text-gray-700 font-semibold mb-2">{{ form.idioma.label }}:</label>
+                    {% render_field form.idioma class="w-full border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" %}
+                    {% if form.idioma.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ form.idioma.errors }}</p>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-5">
+                    <label for="{{ form.copias_disponibles.id_for_label }}" class="block text-gray-700 font-semibold mb-2">{{ form.copias_disponibles.label }}:</label>
+                    {% render_field form.copias_disponibles class="w-full border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" %}
+                    {% if form.copias_disponibles.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ form.copias_disponibles.errors }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botón de Envío -->
+    <div class="mt-6">
+        <button type="submit" class="w-full md:w-auto bg-primary hover:bg-primary-dark text-white font-bold py-3 px-6 rounded-md">
+            Guardar
+        </button>
+    </div>
+</form>
+
+<!-- Script para Mostrar/Ocultar Campos Específicos -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tipoSelect = document.getElementById('id_tipo');
+        const camposLibro = document.getElementById('campos-libro');
+
+        function toggleCamposEspecificos() {
+            if (tipoSelect.value === 'Libro') {
+                camposLibro.classList.remove('hidden');
+            } else {
+                camposLibro.classList.add('hidden');
+            }
+        }
+
+        // Inicializar al cargar la página
+        toggleCamposEspecificos();
+
+        // Agregar evento al cambiar el tipo
+        tipoSelect.addEventListener('change', toggleCamposEspecificos);
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const disponibilidadField = document.getElementById('id_disponibilidad');
+        const copiasContainer = document.getElementById('copias-disponibles-container');
+
+        function toggleCopiasDisponibles() {
+            if (disponibilidadField.value === 'Digital') {
+                copiasContainer.style.display = 'none';
+            } else {
+                copiasContainer.style.display = 'block';
+            }
+        }
+
+        disponibilidadField.addEventListener('change', toggleCopiasDisponibles);
+        toggleCopiasDisponibles();  // Initialize on load
+    });
+</script>
+{% endblock %}

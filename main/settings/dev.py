@@ -3,7 +3,7 @@ from .base import *
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['biblioteca-gobz.onrender.com','localhost', '127.0.0.1']
 
 # Configuración de base de datos para desarrollo local
 #DATABASES = {

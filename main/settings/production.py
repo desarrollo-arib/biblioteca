@@ -3,7 +3,8 @@ from .base import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
+ALLOWED_HOSTS = ['biblioteca-gobz.onrender.com']
+
 
 # Configuración de base de datos de producción
 DATABASES = {

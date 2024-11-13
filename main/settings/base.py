@@ -13,6 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # Application definition
 # Cargar las variables del .env
 load_dotenv(os.path.join(BASE_DIR, '.env'))
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 INSTALLED_APPS = [
     'django.contrib.admin',

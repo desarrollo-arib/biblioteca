@@ -6,6 +6,26 @@
     <title>Iniciar Sesión</title>
     <link rel="stylesheet" href="{% static 'css/output.css' %}">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+    extend: {
+      backgroundImage: theme => ({
+        'login-bg': "url('https://df5kbf1hky40.cloudfront.net/media/library_center/login/2019/03/20190326170836.jpg)",
+      }),
+      colors: {
+        primary: '#1E3A8A',
+        secondary: '#2563EB',
+        accent: '#F59E0B',
+        emphasis: '#10B981',
+        warning: '#EF4444',
+        'bg-light': '#F9FAFB',
+        'bg-dark': '#111827',
+      },
+    },
+  },
+        }
+    </script>
 
 </head>
 <body class="bg-gray-100">
